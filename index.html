@@ -710,16 +710,202 @@
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
 
+  /* ========== HAMBURGER ========== */
+  .hamburger {
+    display: none;
+    position: fixed;
+    top: 14px; left: 14px;
+    z-index: 1100;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    width: 40px; height: 40px;
+    align-items: center; justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    flex-direction: column; gap: 5px; padding: 0;
+    transition: var(--transition);
+  }
+  .hamburger span {
+    display: block; width: 18px; height: 2px;
+    background: var(--text); border-radius: 2px;
+    transition: var(--transition);
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Sidebar overlay backdrop */
+  .sidebar-backdrop {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 900;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+  .sidebar-backdrop.open { display: block; }
+
+  /* ========== TABLET (900px) ========== */
   @media (max-width: 900px) {
-    .main { padding: 24px 20px; }
+    :root { --sidebar-w: 240px; }
+
+    .hamburger { display: flex; }
+
+    .sidebar {
+      position: fixed;
+      left: calc(-1 * var(--sidebar-w) - 20px);
+      top: 0; bottom: 0;
+      z-index: 1000;
+      transition: left .28s cubic-bezier(.4,0,.2,1);
+      box-shadow: none;
+    }
+    .sidebar.open {
+      left: 0;
+      box-shadow: 4px 0 40px rgba(0,0,0,0.18);
+    }
+
+    .main {
+      margin-left: 0;
+      padding: 20px 16px 20px;
+      padding-top: 68px; /* space for hamburger */
+    }
+
+    .page-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .page-header .btn { width: 100%; }
+
     .stat-grid { grid-template-columns: 1fr 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+
+    .card-title { font-size: 14px; }
+
+    /* Tables scroll on tablet */
+    .table-wrap, .log-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { min-width: 540px; }
+
+    /* Modal */
+    .modal { max-width: calc(100vw - 32px); margin: 16px; max-height: 90vh; overflow-y: auto; }
+    .modal-wide { max-width: calc(100vw - 32px); }
+    .modal-body { padding: 20px; }
+    .modal-header { padding: 18px 20px 14px; }
+    .modal-footer { padding: 14px 20px; }
+
+    /* Worker detail modal */
+    #modal-worker-detail .modal { max-width: calc(100vw - 32px); }
+
+    /* Payment strip → stack on tablet */
+    .payment-strip { grid-template-columns: 1fr 1fr !important; }
+
+    /* Log entry layout */
+    .log-section-title { font-size: 13px; }
+  }
+
+  /* ========== MOBILE (600px) ========== */
+  @media (max-width: 600px) {
+    :root { --sidebar-w: 100vw; --radius: 14px; --radius-sm: 10px; }
+
+    body { font-size: 14px; }
+
+    .main { padding: 64px 12px 24px; }
+
+    /* Sidebar full-width on mobile */
+    .sidebar { width: 85vw; left: -90vw; border-radius: 0 18px 18px 0; }
+
+    .page-title { font-size: 22px; }
+    .page-subtitle { font-size: 12px; }
+
+    /* Stats → single column on very small */
+    .stat-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .stat-card { padding: 16px; }
+    .stat-value { font-size: 22px; }
+
+    .grid-2, .grid-3 { grid-template-columns: 1fr; gap: 12px; }
+
+    /* Cards */
+    .card { padding: 16px; border-radius: var(--radius-sm); }
+    .card-title { font-size: 13px; margin-bottom: 14px; }
+
+    /* Buttons */
+    .btn { padding: 9px 16px; font-size: 13px; }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+    /* Tables — horizontal scroll, compact */
+    .table-wrap, .log-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 10px; }
+    table { min-width: 480px; font-size: 12.5px; }
+    th, td { padding: 9px 10px; }
+
+    /* Modals — full screen on mobile */
+    .modal-overlay { align-items: flex-end; padding: 0; }
+    .modal {
+      max-width: 100vw;
+      width: 100vw;
+      margin: 0;
+      border-radius: 20px 20px 0 0;
+      max-height: 92vh;
+      overflow-y: auto;
+    }
+    .modal-wide { max-width: 100vw; }
+
+    /* Forms */
+    .form-control { font-size: 16px; } /* Prevent iOS zoom */
+    .grid-2.gap-8 { grid-template-columns: 1fr 1fr; }
+
+    /* flex-between stacks on small */
+    .flex-between { gap: 10px; }
+
+    /* Payment strip → single column */
+    div[style*="grid-template-columns:1fr 1fr 1fr auto"] {
+      grid-template-columns: 1fr 1fr !important;
+    }
+
+    /* Log entry table */
+    #le-materials-body input, #le-workers-body input { min-width: 80px !important; font-size: 13px; }
+
+    /* Project detail tabs */
+    .tab-bar { gap: 4px; overflow-x: auto; flex-wrap: nowrap; }
+    .tab-btn { white-space: nowrap; padding: 7px 14px; font-size: 12px; }
+
+    /* Page header button full width */
+    .page-header { gap: 10px; }
+    .page-header button { width: 100%; }
+
+    /* Attendance calendar */
+    .att-day { width: 34px !important; height: 34px !important; font-size: 12px !important; }
+
+    /* Contractor card header */
+    .flex-between.mb-16 { flex-wrap: wrap; }
+
+    /* Nav label spacing */
+    .sidebar-label { padding: 18px 20px 6px; font-size: 10px; }
+    .nav-item { padding: 11px 18px; font-size: 14px; }
+  }
+
+  /* ========== VERY SMALL (380px) ========== */
+  @media (max-width: 380px) {
+    .stat-grid { grid-template-columns: 1fr; }
+    .stat-value { font-size: 20px; }
+    .main { padding: 60px 10px 20px; }
   }
 </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
+<!-- HAMBURGER -->
+<button class="hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+  <span></span><span></span><span></span>
+</button>
+<div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
+
 <!-- SIDEBAR -->
-<aside class="sidebar">
+<aside class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div class="app-wordmark">VogLog</div>
     <div class="app-tagline">Site Management</div>
@@ -1047,7 +1233,7 @@
   <div class="page-header">
     <div>
       <div class="page-title">Reports & Export</div>
-      <div class="page-subtitle">Generate PDF reports for projects</div>
+      <div class="page-subtitle">Generate PDF or Excel reports</div>
     </div>
   </div>
   <div class="grid-2 gap-24">
@@ -1070,7 +1256,10 @@
         <label class="flex-center gap-8 mb-8 text-sm"><input type="checkbox" id="rpt-inc-office"> Office Expenses</label>
         <label class="flex-center gap-8 text-sm"><input type="checkbox" id="rpt-inc-fin" checked> Financial Summary</label>
       </div>
-      <button class="btn btn-primary w-full" onclick="generateMonthlyReport()">📄 Generate Monthly PDF</button>
+      <div class="flex gap-8">
+        <button class="btn btn-primary" style="flex:1" onclick="generateMonthlyReport()">📄 PDF</button>
+        <button class="btn btn-secondary" style="flex:1" onclick="generateMonthlyExcel()">📊 Excel</button>
+      </div>
     </div>
     <div class="card">
       <div class="card-title">Description Filter Report</div>
@@ -1092,7 +1281,10 @@
         <div id="rpt2-desc-list" style="max-height:180px;overflow-y:auto;border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:10px;background:rgba(255,255,255,0.8)">
         </div>
       </div>
-      <button class="btn btn-primary w-full" onclick="generateDescReport()">📄 Generate Filter PDF</button>
+      <div class="flex gap-8">
+        <button class="btn btn-primary" style="flex:1" onclick="generateDescReport()">📄 PDF</button>
+        <button class="btn btn-secondary" style="flex:1" onclick="generateDescExcel()">📊 Excel</button>
+      </div>
     </div>
   </div>
 </section>
@@ -1984,7 +2176,7 @@ function renderLabourContractors(contractors) {
       </div>
 
       <!-- Payment Summary Strip -->
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:1px;background:var(--border);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:20px">
+      <div class="payment-strip" style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:1px;background:var(--border);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:20px">
         <div style="background:var(--surface-2);padding:14px 18px">
           <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-3);margin-bottom:5px">Total Payable</div>
           <div class="font-mono fw-600" style="font-size:16px">${fmt(contractorTotal)}</div>
@@ -2874,7 +3066,8 @@ function buildReportHTML({title, subtitle, entries, proj, month, incMat, incLab,
     .fin-row:last-child{border-bottom:none;font-weight:700}
     .summary{background:#f5f5f7;padding:16px 20px;border-radius:10px;margin-bottom:20px}
     .footer{margin-top:40px;padding-top:12px;border-top:1px solid #e0e0e0;font-size:11px;color:#aeaeb2;text-align:center}
-  </style></head><body>
+  </style>
+</head><body>
   <div class="header">
     <div><h1>${title}</h1><h2>${subtitle}</h2></div>
     ${logoB64 ? `<img src="${logoB64}" class="logo">` : '<div style="font-weight:700;color:#C9A84C">VOGELKOP</div>'}
@@ -2934,6 +3127,215 @@ function buildReportHTML({title, subtitle, entries, proj, month, incMat, incLab,
   return html;
 }
 
+
+// ============================================================
+// EXCEL EXPORTS
+// ============================================================
+
+function excelFmt(n) { return n || 0; }
+
+function generateMonthlyExcel() {
+  const pid = document.getElementById('rpt-project').value;
+  const month = document.getElementById('rpt-month').value;
+  if (!month) { alert('Select a month'); return; }
+
+  const incMat = document.getElementById('rpt-inc-materials').checked;
+  const incLab = document.getElementById('rpt-inc-labour').checked;
+  const incOE  = document.getElementById('rpt-inc-office').checked;
+  const incFin = document.getElementById('rpt-inc-fin').checked;
+
+  const entries = DB.logEntries.filter(e => e.date?.startsWith(month) && (!pid || e.projectId === pid));
+  const proj = pid ? getProjectById(pid) : null;
+
+  buildAndDownloadExcel({
+    filename: `VogLog_Monthly_${month}${proj ? '_' + proj.name.replace(/\s+/g,'_') : ''}.xlsx`,
+    entries, proj, month,
+    incMat, incLab, incOE, incFin
+  });
+}
+
+function generateDescExcel() {
+  const pid = document.getElementById('rpt2-project').value;
+  const from = document.getElementById('rpt2-from').value;
+  const to   = document.getElementById('rpt2-to').value;
+  const selectedDescs = [...document.querySelectorAll('#rpt2-desc-list input:checked')].map(x => x.value);
+
+  const entries = DB.logEntries
+    .filter(e => (!pid || e.projectId === pid) && (!from || e.date >= from) && (!to || e.date <= to))
+    .map(e => ({ ...e, materials: (e.materials||[]).filter(m => selectedDescs.includes(m.desc)) }))
+    .filter(e => e.materials.length);
+
+  const proj = pid ? getProjectById(pid) : null;
+
+  buildAndDownloadExcel({
+    filename: `VogLog_FilterReport_${from}_to_${to}.xlsx`,
+    entries, proj, month: null,
+    incMat: true, incLab: false, incOE: false, incFin: !!pid
+  });
+}
+
+function buildAndDownloadExcel({ filename, entries, proj, month, incMat, incLab, incOE, incFin }) {
+  const wb = XLSX.utils.book_new();
+
+  // Helper: auto-fit columns
+  function autoWidth(data) {
+    if (!data.length) return [];
+    return Object.keys(data[0]).map(key => ({
+      wch: Math.max(key.length, ...data.map(r => String(r[key]||'').length)) + 2
+    }));
+  }
+
+  // ── FINANCIAL SUMMARY ──────────────────────────────────
+  if (incFin && proj) {
+    const spent = getProjectSpent(proj.id);
+    const balance = (proj.received||0) - spent;
+    const finData = [
+      { 'Item': 'Project Name',    'Value': proj.name },
+      { 'Item': 'Project Type',    'Value': proj.type||'' },
+      { 'Item': 'Client',          'Value': proj.client||'' },
+      { 'Item': 'Project Cost',    'Value': excelFmt(proj.cost) },
+      { 'Item': 'Amount Received', 'Value': excelFmt(proj.received) },
+      { 'Item': 'Amount Spent',    'Value': excelFmt(spent) },
+      { 'Item': 'Balance',         'Value': excelFmt(balance) },
+    ];
+    const wsF = XLSX.utils.json_to_sheet(finData);
+    wsF['!cols'] = autoWidth(finData);
+    XLSX.utils.book_append_sheet(wb, wsF, 'Financial Summary');
+  }
+
+  // ── MATERIALS ──────────────────────────────────────────
+  if (incMat) {
+    let matTotal = 0;
+    const matData = entries.flatMap(e =>
+      (e.materials||[]).map(m => {
+        matTotal += m.amount||0;
+        return {
+          'Date':        m.date || e.date,
+          'Project':     getProjectById(e.projectId)?.name || '',
+          'Description': m.desc,
+          'Category':    m.category || '',
+          'Qty':         m.qty || 0,
+          'Unit':        m.unit || '',
+          'Rate (₹)':    excelFmt(m.rate),
+          'Amount (₹)':  excelFmt(m.amount),
+          'Logged By':   e.loggedBy || ''
+        };
+      })
+    );
+    if (matData.length) {
+      matData.push({ 'Date':'', 'Project':'', 'Description':'', 'Category':'', 'Qty':'', 'Unit':'', 'Rate (₹)':'TOTAL', 'Amount (₹)': excelFmt(matTotal), 'Logged By':'' });
+    }
+    const wsM = XLSX.utils.json_to_sheet(matData.length ? matData : [{ 'Note': 'No materials for this period' }]);
+    wsM['!cols'] = autoWidth(matData.length ? matData : [{ 'Note': '' }]);
+    XLSX.utils.book_append_sheet(wb, wsM, 'Materials');
+  }
+
+  // ── LABOUR ─────────────────────────────────────────────
+  if (incLab) {
+    let labTotal = 0;
+    const labData = entries.flatMap(e =>
+      (e.workers||[]).filter(w => w.present).map(w => {
+        labTotal += w.amount||0;
+        return {
+          'Date':       e.date,
+          'Project':    getProjectById(e.projectId)?.name || '',
+          'Worker':     w.name,
+          'Role':       w.role || '',
+          'Contractor': w.contractor || '',
+          'Wage/Day (₹)': excelFmt(w.wage),
+          'Amount (₹)': excelFmt(w.amount)
+        };
+      })
+    );
+    if (labData.length) {
+      labData.push({ 'Date':'', 'Project':'', 'Worker':'', 'Role':'', 'Contractor':'', 'Wage/Day (₹)':'TOTAL', 'Amount (₹)': excelFmt(labTotal) });
+    }
+    const wsL = XLSX.utils.json_to_sheet(labData.length ? labData : [{ 'Note': 'No labour for this period' }]);
+    wsL['!cols'] = autoWidth(labData.length ? labData : [{ 'Note': '' }]);
+    XLSX.utils.book_append_sheet(wb, wsL, 'Labour');
+  }
+
+  // ── OFFICE EXPENSES ────────────────────────────────────
+  if (incOE) {
+    const oes = month
+      ? DB.officeExpenses.filter(e => e.date?.startsWith(month))
+      : DB.officeExpenses;
+    let oeTotal = 0;
+    const oeData = oes.map(e => {
+      oeTotal += e.amount||0;
+      return {
+        'Date':            e.date,
+        'Description':     e.desc,
+        'Linked Project':  getProjectById(e.projectId)?.name || 'General',
+        'Amount (₹)':      excelFmt(e.amount),
+        'Notes':           e.notes || ''
+      };
+    });
+    if (oeData.length) {
+      oeData.push({ 'Date':'', 'Description':'TOTAL', 'Linked Project':'', 'Amount (₹)': excelFmt(oeTotal), 'Notes':'' });
+    }
+    const wsO = XLSX.utils.json_to_sheet(oeData.length ? oeData : [{ 'Note': 'No office expenses for this period' }]);
+    wsO['!cols'] = autoWidth(oeData.length ? oeData : [{ 'Note': '' }]);
+    XLSX.utils.book_append_sheet(wb, wsO, 'Office Expenses');
+  }
+
+  // ── CONTRACTOR PAYMENTS ────────────────────────────────
+  if (proj) {
+    const contractors = DB.contractors.filter(c => c.projectId === proj.id);
+    const cpData = contractors.flatMap(c => {
+      const payments = DB.payments.filter(p => p.contractorId === c.id);
+      return payments.map(p => ({
+        'Contractor':  c.name,
+        'Date':        p.date,
+        'Amount (₹)':  excelFmt(p.amount),
+        'Notes':       p.notes || ''
+      }));
+    });
+    if (cpData.length) {
+      const wsCP = XLSX.utils.json_to_sheet(cpData);
+      wsCP['!cols'] = autoWidth(cpData);
+      XLSX.utils.book_append_sheet(wb, wsCP, 'Contractor Payments');
+    }
+  }
+
+  // ── LABOUR SUMMARY (from Labour Management) ──────────────────
+  const labMgmtContractors = proj
+    ? DB.contractors.filter(c => c.projectId === proj.id)
+    : DB.contractors;
+  const labMgmtData = labMgmtContractors.flatMap(c => {
+    const workers = DB.workers.filter(w => w.contractorId === c.id);
+    const ctrPaid = DB.payments.filter(p => p.contractorId === c.id).reduce((s,p) => s+(p.amount||0), 0);
+    const ctrTotal = workers.reduce((s, w) => s + (countWorkerDays(w.id) * (w.wage||0)), 0);
+    const projName = getProjectById(c.projectId)?.name || '';
+    return workers.map(w => {
+      const days = countWorkerDays(w.id);
+      return {
+        'Project':           projName,
+        'Contractor':        c.name,
+        'Worker':            w.name,
+        'Type':              w.type || '',
+        'Wage/Day (₹)':      excelFmt(w.wage),
+        'Days Present':      days,
+        'Worker Payable (₹)':excelFmt(days * (w.wage||0)),
+        'Contractor Paid (₹)': excelFmt(ctrPaid),
+        'Balance Due (₹)':   excelFmt(ctrTotal - ctrPaid)
+      };
+    });
+  });
+  if (labMgmtData.length) {
+    const wsLM = XLSX.utils.json_to_sheet(labMgmtData);
+    wsLM['!cols'] = autoWidth(labMgmtData);
+    XLSX.utils.book_append_sheet(wb, wsLM, 'Labour Summary');
+  }
+
+  if (!wb.SheetNames.length) {
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet([{ 'Note': 'No data for selected options' }]), 'Report');
+  }
+
+  XLSX.writeFile(wb, filename);
+  showToast('Excel downloaded ✓');
+}
+
 function printReport(html) {
   const w = window.open('', '_blank');
   w.document.write(html);
@@ -2980,6 +3382,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+// ============================================================
+// RESPONSIVE SIDEBAR
+// ============================================================
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  const hamburger = document.getElementById('hamburger');
+  const isOpen = sidebar.classList.contains('open');
+  if (isOpen) {
+    closeSidebar();
+  } else {
+    sidebar.classList.add('open');
+    backdrop.classList.add('open');
+    hamburger.classList.add('open');
+  }
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-backdrop').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+// Auto-close sidebar when a nav item is clicked on mobile
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (window.innerWidth <= 900) closeSidebar();
+  });
+});
+
+// Close sidebar on resize to desktop
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 900) closeSidebar();
+});
+
 </script>
 </body>
 </html>
